@@ -1,8 +1,7 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import { appendE2ELog, buildE2EScreenshotPath } from '../../../shared/e2e-log';
 
 export type BannerRunLog = {
-  timestamp: string;
+  timestamp?: string;
   site: string;
   username: string;
   displayName: string;
@@ -14,20 +13,15 @@ export type BannerRunLog = {
     wrapperPath: string;
     calendarPath: string;
   };
-  scheduleScreenshotPath: string;
+  scheduleScreenshotPath?: string;
   status: 'passed' | 'failed';
   errorCode?: string;
   errorMessage?: string;
+  caso?: string;
+  duracionMs?: number;
+  navegador?: string;
+  videos?: string[];
 };
-
-const screenshotDir = path.resolve(process.cwd(), 'evidencias', 'banner', 'screenshots');
-const logsDir = path.resolve(process.cwd(), 'evidencias', 'banner', 'logs');
-const jsonlPath = path.join(logsDir, 'banner-runs.jsonl');
-
-function ensureDirs(): void {
-  fs.mkdirSync(screenshotDir, { recursive: true });
-  fs.mkdirSync(logsDir, { recursive: true });
-}
 
 export function buildTimestampTag(date: Date = new Date()): string {
   const pad = (n: number) => n.toString().padStart(2, '0');
@@ -35,12 +29,49 @@ export function buildTimestampTag(date: Date = new Date()): string {
 }
 
 export function buildScreenshotPath(prefix: string): string {
-  ensureDirs();
-  const tag = buildTimestampTag();
-  return path.join(screenshotDir, `${prefix}-${tag}.png`);
+  return buildE2EScreenshotPath('banner', prefix);
 }
 
 export function appendBannerRunLog(entry: BannerRunLog): void {
-  ensureDirs();
-  fs.appendFileSync(jsonlPath, `${JSON.stringify(entry)}\n`, 'utf8');
+  const wrapperPath = entry.scheduleScreenshots?.wrapperPath ?? entry.scheduleScreenshotPath ?? '';
+  const calendarPath = entry.scheduleScreenshots?.calendarPath ?? '';
+  const capturas = [wrapperPath, calendarPath].filter(Boolean);
+  const estado = entry.status === 'passed' ? 'exitoso' : 'fallido';
+  const fechaHora = entry.timestamp ?? new Date().toISOString();
+
+  const registroEspanol = {
+    fecha_hora: fechaHora,
+    suite: 'banner',
+    caso: entry.caso ?? 'BANNER-E2E',
+    sitio_o_url: entry.site,
+    estado,
+    duracion_ms: entry.duracionMs ?? 0,
+    navegador: entry.navegador ?? 'edge-banner',
+    capturas,
+    videos: entry.videos,
+    detalle_error: entry.errorMessage,
+    usuario: entry.username,
+    nombre_mostrado: entry.displayName,
+    cantidad_asignaturas: entry.subjectsCount,
+    periodo_valor: entry.periodValue,
+    periodo_etiqueta: entry.periodLabel,
+    uso_periodo_fallback: entry.usedFallbackPeriod ?? false,
+    codigo_error: entry.errorCode,
+    // Alias temporales de compatibilidad
+    timestamp: fechaHora,
+    site: entry.site,
+    username: entry.username,
+    displayName: entry.displayName,
+    subjectsCount: entry.subjectsCount,
+    periodValue: entry.periodValue,
+    periodLabel: entry.periodLabel,
+    usedFallbackPeriod: entry.usedFallbackPeriod,
+    scheduleScreenshots: entry.scheduleScreenshots,
+    scheduleScreenshotPath: wrapperPath,
+    status: entry.status,
+    errorCode: entry.errorCode,
+    errorMessage: entry.errorMessage,
+  };
+
+  appendE2ELog(registroEspanol, { suite: 'banner', fileName: 'banner-runs.jsonl', print: true });
 }

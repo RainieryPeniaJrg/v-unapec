@@ -8,7 +8,8 @@ import { appendBannerRunLog, buildScreenshotPath } from './utils/banner-log';
 const bannerSite = 'https://landing.unapec.edu.do/banner/';
 
 test.describe('Banner E2E real', () => {
-  test('BANNER-E2E-001 login -> consulta horario -> logout', async ({ page }) => {
+  test('BANNER-E2E-001 login -> consulta horario -> logout', async ({ page }, testInfo) => {
+    const startedAt = Date.now();
     let env = getBannerEnv();
     const loginPage = new BannerLoginPage(page);
     const homePage = new BannerHomePage(page);
@@ -72,6 +73,9 @@ test.describe('Banner E2E real', () => {
         usedFallbackPeriod,
         scheduleScreenshots,
         scheduleScreenshotPath: scheduleScreenshots.wrapperPath,
+        caso: testInfo.title,
+        duracionMs: Date.now() - startedAt,
+        navegador: testInfo.project.name,
         status: 'passed',
       });
     } catch (error) {
@@ -86,6 +90,9 @@ test.describe('Banner E2E real', () => {
         usedFallbackPeriod,
         scheduleScreenshots,
         scheduleScreenshotPath: scheduleScreenshots.wrapperPath,
+        caso: testInfo.title,
+        duracionMs: Date.now() - startedAt,
+        navegador: testInfo.project.name,
         status: 'failed',
         errorMessage: error instanceof Error ? error.message : 'Unknown error',
       });
@@ -93,7 +100,8 @@ test.describe('Banner E2E real', () => {
     }
   });
 
-  test('BANNER-E2E-002 login invalido muestra error y registra fallo', async ({ page }) => {
+  test('BANNER-E2E-002 login invalido muestra error y registra fallo', async ({ page }, testInfo) => {
+    const startedAt = Date.now();
     let env = getBannerEnv();
     test.skip(!env.runNegative, 'Set BANNER_RUN_NEGATIVE=true to run negative login test.');
 
@@ -118,13 +126,17 @@ test.describe('Banner E2E real', () => {
       displayName: env.bannerUsername,
       subjectsCount: 0,
       scheduleScreenshotPath: negativeScreenshotPath,
+      caso: testInfo.title,
+      duracionMs: Date.now() - startedAt,
+      navegador: testInfo.project.name,
       status: 'failed',
       errorCode: 'INVALID_LOGIN_EXPECTED',
       errorMessage: 'Negative test with intentionally invalid password.',
     });
   });
 
-  test('BANNER-E2E-003 resiliencia: ruta horario no disponible genera evidencia', async ({ page }) => {
+  test('BANNER-E2E-003 resiliencia: ruta horario no disponible genera evidencia', async ({ page }, testInfo) => {
+    const startedAt = Date.now();
     let env = getBannerEnv();
     test.skip(!env.runResilience, 'Set BANNER_RUN_RESILIENCE=true to run resilience test.');
 
@@ -151,6 +163,9 @@ test.describe('Banner E2E real', () => {
       displayName: env.bannerUsername,
       subjectsCount: 0,
       scheduleScreenshotPath: evidencePath,
+      caso: testInfo.title,
+      duracionMs: Date.now() - startedAt,
+      navegador: testInfo.project.name,
       status: 'failed',
       errorCode: 'SCHEDULE_ROUTE_NOT_FOUND',
       errorMessage: 'Simulated unavailable schedule route to validate resilience evidence.',

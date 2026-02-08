@@ -15,6 +15,7 @@ Incluye evidencias automáticas:
 - reporte HTML en `playwright-report-banner/`
 - período objetivo `ENE-ABR 2026 GRADO` (`202610`) con fallback al período disponible
 - cantidad de asignaturas calculada por `NRC` único (deduplicado)
+- log en consola por cada prueba E2E (resumen + JSON en español)
 
 ## Archivo .env requerido (carga automatica)
 
