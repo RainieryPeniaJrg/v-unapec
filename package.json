@@ -4,11 +4,12 @@
   "description": "E2E automation with Playwright + TypeScript for UNAPEC labs",
   "scripts": {
     "test": "playwright test",
-    "test:headed": "playwright test --headed",
+    "test:unit": "playwright test tests/lab-tema02/unit",
+    "test:integration": "playwright test tests/lab-tema02/integration",
+    "test:e2e": "playwright test tests/lab-tema02/e2e",
+    "test:headed": "playwright test --headed --project=edge",
     "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug",
-    "test:tema02": "playwright test tests/contexto/tema02",
-    "test:tema03": "playwright test tests/contexto/tema03",
+    "test:debug": "playwright test --debug --project=edge",
     "report": "playwright show-report"
   },
   "keywords": [],
