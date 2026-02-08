@@ -1,28 +1,22 @@
-# V UNAPEC - Lab Tema 02 (ISO410) en Playwright + TypeScript
+# V UNAPEC - ISO410 Labs con Playwright + TypeScript (Edge)
 
-Repositorio preparado para ejecutar los ejercicios del `Lab-Tema02-ISO410.pdf` con estructura profesional de testing.
+Repositorio estructurado para ejecutar laboratorios del curso ISO410 con enfoque de testing por niveles y trazabilidad documental.
 
-## Estructura real de proyecto
+## Laboratorios incluidos
 
-- `src/tema02/`: implementaciones TypeScript de ejercicios programaticos.
-- `tests/lab-tema02/unit/`: pruebas unitarias.
-- `tests/lab-tema02/integration/`: pruebas de integracion.
-- `tests/lab-tema02/e2e/`: pruebas de sistema E2E con Playwright (Page Object + test data).
-- `web/`: HTML local para el ejercicio E2E.
-- `docs/lab-tema02/`: respuestas en Markdown para ejercicios de foro/documentales.
-- `Contexto/`: PDFs originales del laboratorio.
+- Tema 02: `tests/lab-tema02/` y `docs/lab-tema02/`.
+- Tema 03: `tests/lab-tema03/`, `docs/lab-tema03/` y `evidencias/tema03/`.
 
-## Ejercicios cubiertos
+## Estructura principal
 
-- Ejercicio 1: `docs/lab-tema02/ejercicio1-fundamentos.md`
-- Ejercicio 2A/2B: `src/tema02/calculadora.ts` + `docs/lab-tema02/ejercicio2-inspeccion-walkthrough.md`
-- Ejercicio 3A: `src/tema02/math-utils.ts` + `tests/lab-tema02/unit/math-utils.spec.ts`
-- Ejercicio 3B: `src/tema02/repositorio.ts`, `src/tema02/auth.ts`, `tests/lab-tema02/integration/auth.spec.ts`
-- Ejercicio 4: `docs/lab-tema02/ejercicio4-uat.md`
-- Ejercicio 5: `docs/lab-tema02/ejercicio5-mini-formales.md`
-- Ejercicio 6: `web/calculadora.html` + `tests/lab-tema02/e2e/calculadora.e2e.spec.ts`
+- `src/tema02/` y `src/tema03/`: implementaciones TypeScript.
+- `tests/lab-tema02/` y `tests/lab-tema03/`: suites por laboratorio.
+- `web/`: demos locales para pruebas E2E.
+- `docs/`: respuestas/documentos en Markdown.
+- `evidencias/tema03/`: carpetas A1..A6 para capturas y reportes.
+- `Contexto/`: PDFs fuente.
 
-## Ejecucion local (Edge)
+## Ejecucion base (Edge)
 
 ```powershell
 npm ci
@@ -32,18 +26,32 @@ npm test
 
 ## Scripts
 
-- `npm test`: ejecuta todo Tema 02.
-- `npm run test:unit`: solo unitarias.
-- `npm run test:integration`: solo integracion.
-- `npm run test:e2e`: solo E2E.
+- `npm test`: ejecuta todas las pruebas Playwright (Tema 02 + Tema 03).
+- `npm run test:unit`: unitarias Tema 02.
+- `npm run test:integration`: integracion Tema 02.
+- `npm run test:e2e`: E2E Tema 02.
+- `npm run test:tema03`: toda la suite Tema 03.
+- `npm run test:tema03:unit`: unitarias Tema 03.
+- `npm run test:tema03:integration`: integracion API mock Tema 03.
+- `npm run test:tema03:e2e`: sistema E2E Tema 03.
+- `npm run test:tema03:perf`: script k6 de rendimiento Tema 03.
+- `npm run evidencias:tema03`: valida estructura minima de `evidencias/tema03`.
 - `npm run test:headed`: ejecucion visual en Edge.
-- `npm run test:debug`: debug en Edge.
+- `npm run test:debug`: depuracion en Edge.
 - `npm run report`: abre reporte HTML.
+
+## Tema 03 - Entregables clave
+
+- Actividad 1: `docs/lab-tema03/actividad1-equivalencias-limites.md`
+- Actividad 2: `src/tema03/descuentos.ts` + `tests/lab-tema03/unit/descuentos.spec.ts`
+- Actividad 3: `tests/lab-tema03/integration/api-mock.spec.ts`
+- Actividad 4: `web/tema03-demo/index.html` + `tests/lab-tema03/e2e/flujo-login-accion-logout.spec.ts`
+- Actividad 5: `tests/lab-tema03/performance/saldo-load.k6.js`
+- Actividad 6: `docs/lab-tema03/matriz-trazabilidad.md` + `docs/lab-tema03/reporte-defecto-ejemplo.md`
 
 ## Buenas practicas aplicadas
 
-- Separacion por nivel de prueba (unit/integration/e2e).
-- Page Object Model en E2E.
-- Datos de prueba desacoplados.
+- Separacion por nivel de prueba: unidad, integracion, sistema, performance.
+- Page Object Model y test data desacoplada en E2E.
 - `test.step(...)` para trazabilidad de ejecucion.
-- Matriz de trazabilidad: `docs/lab-tema02/matriz-trazabilidad.md`.
+- Documentacion de apoyo y matriz de trazabilidad por laboratorio.
