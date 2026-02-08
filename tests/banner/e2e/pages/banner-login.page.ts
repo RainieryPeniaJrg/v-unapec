@@ -1,4 +1,5 @@
 import { expect, Page } from '@playwright/test';
+import { buildScreenshotPath } from '../utils/banner-log';
 
 export class BannerLoginPage {
   constructor(private readonly page: Page) {}
@@ -11,10 +12,18 @@ export class BannerLoginPage {
   async openBannerPortal(): Promise<void> {
     const studentAccessLink = this.page.getByRole('link', { name: /Acceso para estudiantes/i });
     await expect(studentAccessLink).toBeVisible();
-    await studentAccessLink.click();
-    await this.page.waitForURL(/login\.microsoftonline\.com|StudentSelfService|registro\.unapec\.edu\.do/i, {
+
+    const href = await studentAccessLink.getAttribute('href');
+    if (href) {
+      await this.page.goto(href, { waitUntil: 'domcontentloaded', timeout: 60_000 });
+    } else {
+      await studentAccessLink.click();
+    }
+
+    await this.page.waitForURL(/login\.microsoftonline\.com|StudentSelfService|registro\.unapec\.edu\.do|alumnos\.unapec\.edu\.do/i, {
       timeout: 60_000,
     });
+    await this.captureStep('login-page-loaded');
   }
 
   async login(username: string, password: string): Promise<void> {
@@ -26,13 +35,17 @@ export class BannerLoginPage {
     const emailInput = this.page.locator('#i0116, input[name=\"loginfmt\"]');
     await expect(emailInput).toBeVisible({ timeout: 30_000 });
     await emailInput.fill(username);
+    await this.captureStep('email-filled');
     await this.page.locator('#idSIButton9, input[type=\"submit\"][value=\"Next\"]').first().click();
 
     const passwordInput = this.page.locator('#i0118, input[name=\"passwd\"]');
     await expect(passwordInput).toBeVisible({ timeout: 30_000 });
+    await this.captureStep('password-page-loaded');
     await passwordInput.fill(password);
+    await this.captureStep('password-filled');
     await this.page.locator('#idSIButton9, input[type=\"submit\"][value=\"Sign in\"]').first().click();
 
+    await this.captureStep('after-submit');
     await this.handleStaySignedInPrompt();
     await this.page.waitForURL(/alumnos\.unapec\.edu\.do|registro\.unapec\.edu\.do|StudentSelfService/i, {
       timeout: 90_000,
@@ -68,5 +81,10 @@ export class BannerLoginPage {
     if (await staySignedQuestion.isVisible().catch(() => false)) {
       await this.page.locator('#idSIButton9').click();
     }
+  }
+
+  private async captureStep(label: string): Promise<void> {
+    const path = buildScreenshotPath(label);
+    await this.page.screenshot({ path, fullPage: true });
   }
 }

@@ -9,16 +9,28 @@ const bannerSite = 'https://landing.unapec.edu.do/banner/';
 
 test.describe('Banner E2E real', () => {
   test('BANNER-E2E-001 login -> consulta horario -> logout', async ({ page }) => {
-    const env = getBannerEnv();
+    let env = getBannerEnv();
     const loginPage = new BannerLoginPage(page);
     const homePage = new BannerHomePage(page);
     const schedulePage = new BannerSchedulePage(page);
 
     const postLoginScreenshotPath = buildScreenshotPath('post-login');
-    const scheduleScreenshotPath = buildScreenshotPath('horario');
     const postLogoutScreenshotPath = buildScreenshotPath('post-logout');
+    let displayName = env.bannerUsername;
+    let subjectsCount = 0;
+    let periodValue = '';
+    let periodLabel = '';
+    let usedFallbackPeriod = false;
+    let scheduleScreenshots = {
+      wrapperPath: buildScreenshotPath('lookup-wrapper-failed'),
+      calendarPath: buildScreenshotPath('schedule-calendar-failed'),
+    };
 
     try {
+      await test.step('Validar entorno de credenciales (.env)', async () => {
+        env = getBannerEnv();
+      });
+
       await test.step('Abrir landing y portal Banner', async () => {
         await loginPage.gotoLanding();
         await loginPage.openBannerPortal();
@@ -30,15 +42,17 @@ test.describe('Banner E2E real', () => {
         await page.screenshot({ path: postLoginScreenshotPath, fullPage: true });
       });
 
-      let displayName = env.bannerUsername;
-      let subjectsCount = 0;
-
       await test.step('Consultar horario de clase', async () => {
         displayName = await homePage.getDisplayName(env.bannerUsername);
         await homePage.gotoClassSchedule();
+        const periodSelection = await schedulePage.selectTargetPeriod();
+        periodValue = periodSelection.selectedValue;
+        periodLabel = periodSelection.selectedLabel;
+        usedFallbackPeriod = periodSelection.usedFallback;
         await schedulePage.assertScheduleVisible();
-        subjectsCount = await schedulePage.countSubjects();
-        await schedulePage.screenshotSchedule(scheduleScreenshotPath);
+        await schedulePage.ensureSchedulePanelsVisibleAndScrolled();
+        subjectsCount = await schedulePage.countSubjectsByNrc();
+        scheduleScreenshots = await schedulePage.captureScheduleEvidence();
       });
 
       await test.step('Cerrar sesion', async () => {
@@ -53,7 +67,11 @@ test.describe('Banner E2E real', () => {
         username: env.bannerUsername,
         displayName,
         subjectsCount,
-        scheduleScreenshotPath,
+        periodValue,
+        periodLabel,
+        usedFallbackPeriod,
+        scheduleScreenshots,
+        scheduleScreenshotPath: scheduleScreenshots.wrapperPath,
         status: 'passed',
       });
     } catch (error) {
@@ -61,9 +79,13 @@ test.describe('Banner E2E real', () => {
         timestamp: new Date().toISOString(),
         site: bannerSite,
         username: env.bannerUsername,
-        displayName: env.bannerUsername,
-        subjectsCount: 0,
-        scheduleScreenshotPath,
+        displayName,
+        subjectsCount,
+        periodValue,
+        periodLabel,
+        usedFallbackPeriod,
+        scheduleScreenshots,
+        scheduleScreenshotPath: scheduleScreenshots.wrapperPath,
         status: 'failed',
         errorMessage: error instanceof Error ? error.message : 'Unknown error',
       });
@@ -72,8 +94,12 @@ test.describe('Banner E2E real', () => {
   });
 
   test('BANNER-E2E-002 login invalido muestra error y registra fallo', async ({ page }) => {
-    const env = getBannerEnv();
+    let env = getBannerEnv();
     test.skip(!env.runNegative, 'Set BANNER_RUN_NEGATIVE=true to run negative login test.');
+
+    await test.step('Validar entorno de credenciales (.env)', async () => {
+      env = getBannerEnv();
+    });
 
     const loginPage = new BannerLoginPage(page);
     const negativeScreenshotPath = buildScreenshotPath('login-invalido');
@@ -99,8 +125,13 @@ test.describe('Banner E2E real', () => {
   });
 
   test('BANNER-E2E-003 resiliencia: ruta horario no disponible genera evidencia', async ({ page }) => {
-    const env = getBannerEnv();
+    let env = getBannerEnv();
     test.skip(!env.runResilience, 'Set BANNER_RUN_RESILIENCE=true to run resilience test.');
+
+    await test.step('Validar entorno de credenciales (.env)', async () => {
+      env = getBannerEnv();
+    });
+
     const loginPage = new BannerLoginPage(page);
     const evidencePath = buildScreenshotPath('ruta-horario-no-disponible');
 

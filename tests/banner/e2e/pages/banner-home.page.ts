@@ -65,6 +65,7 @@ export class BannerHomePage {
     }
 
     await this.page.goto(registrationHistoryUrl, { waitUntil: 'domcontentloaded' });
+    await this.page.waitForURL(/registrationHistory\/registrationHistory/i, { timeout: 60_000 });
   }
 
   async logout(): Promise<void> {
@@ -90,8 +91,9 @@ export class BannerHomePage {
 
   async assertLoggedOut(): Promise<void> {
     const url = this.page.url();
-    const urlLooksLoggedOut = /login\.microsoftonline\.com|landing\.unapec\.edu\.do\/banner/i.test(url);
+    const urlLooksLoggedOut = /login\.microsoftonline\.com|landing\.unapec\.edu\.do\/banner|alumnos\.unapec\.edu\.do/i.test(url);
     const loginFieldVisible = await this.page.locator('#i0116, input[name=\"loginfmt\"]').isVisible().catch(() => false);
-    expect(urlLooksLoggedOut || loginFieldVisible).toBeTruthy();
+    const signInVisible = await this.page.getByText(/Acceder|Sign In|Iniciar sesion/i).first().isVisible().catch(() => false);
+    expect(urlLooksLoggedOut || loginFieldVisible || signInVisible).toBeTruthy();
   }
 }

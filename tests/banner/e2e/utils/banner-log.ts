@@ -7,6 +7,13 @@ export type BannerRunLog = {
   username: string;
   displayName: string;
   subjectsCount: number;
+  periodValue?: string;
+  periodLabel?: string;
+  usedFallbackPeriod?: boolean;
+  scheduleScreenshots?: {
+    wrapperPath: string;
+    calendarPath: string;
+  };
   scheduleScreenshotPath: string;
   status: 'passed' | 'failed';
   errorCode?: string;

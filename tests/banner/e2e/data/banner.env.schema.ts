@@ -8,7 +8,13 @@ export type BannerEnv = {
 function readRequiredEnv(key: string): string {
   const value = process.env[key]?.trim();
   if (!value) {
-    throw new Error(`Missing required environment variable: ${key}`);
+    throw new Error(
+      [
+        `Missing required environment variable: ${key}.`,
+        'Define it in your local .env file at project root.',
+        `Example: ${key}=your_value_here`,
+      ].join(' '),
+    );
   }
   return value;
 }
