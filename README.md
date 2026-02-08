@@ -6,6 +6,7 @@ Repositorio estructurado para ejecutar laboratorios del curso ISO410 con enfoque
 
 - Tema 02: `tests/lab-tema02/` y `docs/lab-tema02/`.
 - Tema 03: `tests/lab-tema03/`, `docs/lab-tema03/` y `evidencias/tema03/`.
+- Banner E2E real: `tests/banner/e2e/`, `docs/banner/` y `evidencias/banner/`.
 
 ## Estructura principal
 
@@ -36,6 +37,11 @@ npm test
 - `npm run test:tema03:e2e`: sistema E2E Tema 03.
 - `npm run test:tema03:perf`: script k6 de rendimiento Tema 03.
 - `npm run evidencias:tema03`: valida estructura minima de `evidencias/tema03`.
+- `npm run test:banner`: suite real de Banner (headless).
+- `npm run test:banner:headed`: suite Banner visible en Edge + video.
+- `npm run test:banner:debug`: depuracion suite Banner.
+- `npm run test:banner:ui`: UI mode para suite Banner.
+- `npm run test:banner:report`: abre reporte HTML de Banner.
 - `npm run test:headed`: ejecucion visual en Edge.
 - `npm run test:debug`: depuracion en Edge.
 - `npm run report`: abre reporte HTML.
@@ -55,3 +61,4 @@ npm test
 - Page Object Model y test data desacoplada en E2E.
 - `test.step(...)` para trazabilidad de ejecucion.
 - Documentacion de apoyo y matriz de trazabilidad por laboratorio.
+- Credenciales sensibles por variables de entorno para escenarios reales.

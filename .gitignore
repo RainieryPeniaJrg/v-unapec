@@ -3,7 +3,10 @@
 node_modules/
 /test-results/
 /playwright-report/
+/playwright-report-banner/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
 .env
+evidencias/banner/screenshots/*.png
+evidencias/banner/logs/*.jsonl
