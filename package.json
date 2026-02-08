@@ -1,0 +1,22 @@
+{
+  "name": "v-unapec",
+  "version": "1.0.0",
+  "description": "E2E automation with Playwright + TypeScript for UNAPEC labs",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:tema02": "playwright test tests/contexto/tema02",
+    "test:tema03": "playwright test tests/contexto/tema03",
+    "report": "playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.2.2"
+  }
+}
