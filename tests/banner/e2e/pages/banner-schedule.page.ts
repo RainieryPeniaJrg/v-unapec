@@ -97,49 +97,56 @@ export class BannerSchedulePage {
   }
 
   async countSubjectsByNrc(): Promise<number> {
-    const nrCs = new Set<string>();
-    const byPriority = [
-      this.page.locator('#lookupScheduleTable .slick-row'),
-      this.page.locator('#lookupScheduleTable [role="row"]'),
-      this.page.locator('#scheduleListView .listViewItem'),
-      this.page.locator('#scheduleListView [role="row"]'),
-      this.page.locator('table tbody tr'),
+    const nrcSet = new Set<string>();
+
+    const explicitNrcCells = [
+      this.page.locator('#lookupScheduleTable [aria-describedby*="courseReferenceNumber"]'),
+      this.page.locator('#lookupScheduleTable [id*="courseReferenceNumber"]'),
+      this.page.locator('#scheduleListView [class*="courseReferenceNumber"]'),
+      this.page.locator('#scheduleListView [data-property*="courseReferenceNumber"]'),
     ];
 
-    for (const rows of byPriority) {
-      const rowCount = await rows.count();
-      if (!rowCount) {
-        continue;
-      }
-
-      const texts = await rows.evaluateAll((nodes) =>
-        nodes.map((node) => (node.textContent || '').replace(/\s+/g, ' ').trim()),
+    for (const cells of explicitNrcCells) {
+      const texts = await cells.evaluateAll((nodes) =>
+        nodes
+          .map((node) => (node.textContent || '').replace(/\s+/g, ' ').trim())
+          .filter((value) => value.length > 0),
       );
 
       for (const text of texts) {
-        const nrcFromLabel = text.match(/NRC[:\s]*([0-9]{4,6})/i)?.[1];
-        const nrcFromDigits = text.match(/\b([0-9]{5})\b/)?.[1];
-        const raw = nrcFromLabel || nrcFromDigits;
-        if (raw) {
-          nrCs.add(raw.replace(/\D/g, ''));
+        const normalized = text.match(/([0-9]{5})/)?.[1];
+        if (normalized) {
+          nrcSet.add(normalized);
         }
       }
     }
 
-    if (nrCs.size > 0) {
-      return nrCs.size;
+    if (nrcSet.size > 0) {
+      return nrcSet.size;
     }
 
-    const fallbackRows = [
-      this.page.locator('#lookupScheduleTable .slick-row'),
-      this.page.locator('#scheduleListView .listViewItem'),
-      this.page.locator('table tbody tr'),
+    const scopedContainers = [
+      this.page.locator('#lookupSchedule-wrapper'),
+      this.page.locator('#scheduleListViewWrapper'),
+      this.page.locator('#tabs-lookupSchedule'),
     ];
 
-    for (const locator of fallbackRows) {
-      const count = await locator.count();
-      if (count > 0) {
-        return count;
+    for (const container of scopedContainers) {
+      if (!(await container.isVisible().catch(() => false))) {
+        continue;
+      }
+
+      const text = ((await container.textContent()) || '').replace(/\s+/g, ' ');
+      const labeledMatches = text.matchAll(/\bNRC\b[^0-9]{0,12}([0-9]{5})/gi);
+      for (const match of labeledMatches) {
+        const value = match[1]?.trim();
+        if (value) {
+          nrcSet.add(value);
+        }
+      }
+
+      if (nrcSet.size > 0) {
+        return nrcSet.size;
       }
     }
 
