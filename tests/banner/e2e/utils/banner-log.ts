@@ -75,3 +75,38 @@ export function appendBannerRunLog(entry: BannerRunLog): void {
 
   appendE2ELog(registroEspanol, { suite: 'banner', fileName: 'banner-runs.jsonl', print: true });
 }
+
+/**
+ * Imprime logs detallados en consola mostrando cada paso de ejecucion
+ * con timestamps e indicadores de exito/fallo.
+ */
+export function logDetailedConsole(step: string, status: 'start' | 'success' | 'error', message?: string): void {
+  const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+  const icon = status === 'start' ? '▶' : status === 'success' ? '✅' : '❌';
+  const logLine = `[${timestamp}] ${icon} ${step}${message ? ': ' + message : ''}`;
+  console.log(logLine);
+}
+
+/**
+ * Imprime tabla ASCII resumen de la ejecucion del test
+ */
+export function logTableSummary(entry: BannerRunLog): void {
+  const estado = entry.status === 'passed' ? '✅ EXITOSO' : '❌ FALLIDO';
+  const duracionSeg = ((entry.duracionMs ?? 0) / 1000).toFixed(2);
+  
+  console.log('\n╔══════════════════════════════════════════════════════════════╗');
+  console.log('║             RESUMEN DE EJECUCION - BANNER E2E               ║');
+  console.log('╠══════════════════════════════════════════════════════════════╣');
+  console.log(`║ Usuario              │ ${entry.username.padEnd(45)}║`);
+  console.log(`║ Nombre mostrado      │ ${entry.displayName.padEnd(45)}║`);
+  console.log(`║ Asignaturas contadas │ ${String(entry.subjectsCount).padEnd(45)}║`);
+  console.log(`║ Periodo              │ ${(entry.periodValue || 'N/A').padEnd(45)}║`);
+  console.log(`║ Etiqueta periodo     │ ${(entry.periodLabel || 'N/A').padEnd(45)}║`);
+  console.log(`║ Duracion (segundos)  │ ${duracionSeg.padEnd(45)}║`);
+  console.log(`║ Navegador            │ ${(entry.navegador || 'N/A').padEnd(45)}║`);
+  console.log(`║ Estado               │ ${estado.padEnd(45)}║`);
+  if (entry.errorMessage) {
+    console.log(`║ Error                │ ${entry.errorMessage.substring(0, 45).padEnd(45)}║`);
+  }
+  console.log('╚══════════════════════════════════════════════════════════════╝\n');
+}

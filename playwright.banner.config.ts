@@ -23,6 +23,9 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'on',
+    // slowMo ralentiza cada accion Playwright (en ms) para propositos educativos/demostracion
+    // Permite explicar paso a paso cada interaccion del usuario (login, navegacion, clicks)
+    slowMo: 1500,
   },
   projects: [
     {

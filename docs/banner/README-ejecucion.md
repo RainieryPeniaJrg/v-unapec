@@ -14,7 +14,7 @@ Incluye evidencias automáticas:
 - log JSONL en `evidencias/banner/logs/banner-runs.jsonl`
 - reporte HTML en `playwright-report-banner/`
 - período objetivo `ENE-ABR 2026 GRADO` (`202610`) con fallback al período disponible
-- cantidad de asignaturas calculada por `NRC` único (deduplicado)
+- cantidad de asignaturas calculada por cantidad de `div` en el bloque de horario
 - log en consola por cada prueba E2E (resumen + JSON en español)
 
 ## Archivo .env requerido (carga automatica)
@@ -50,7 +50,7 @@ npm run test:banner:report
 
 - El test intenta seleccionar `202610` (`ENE-ABR 2026 GRADO`) en `#lookupFilter`.
 - Si no existe, usa el período actual y registra `usedFallbackPeriod=true` en el JSONL.
-- `subjectsCount` se calcula por NRC único en el horario (deduplicado por `Set`).
+- `subjectsCount` se calcula por conteo de `div` de asignaturas visibles en el horario.
 
 ## Evidencias de horario
 

@@ -1,0 +1,8 @@
+{
+    "github.copilot.chat.githubMcpServer.enabled": true,
+    "github.copilot.chat.githubMcpServer.lockdown": true,
+    "chat.mcp.assisted.nuget.enabled": true,
+    "chat.mcp.gallery.enabled": true,
+    "github.copilot.chat.githubMcpServer.readonly": true,
+    "github.copilot.chat.newWorkspace.useContext7": true
+}
