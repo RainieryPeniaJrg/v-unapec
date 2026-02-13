@@ -5,7 +5,7 @@ import { Tema03DemoPage } from './pages/tema03-demo.page';
 import { appendE2ELog, buildE2EScreenshotPath } from '../../shared/e2e-log';
 import { createTestLogger } from '../../shared/logging/log-standard';
 
-const visualPauseMs = Number(process.env.PW_VISUAL_PAUSE ?? 2000);
+const visualPauseMs = Number(process.env.PW_VISUAL_PAUSE ?? 1500);
 
 test.describe('Tema 03 - Actividad 4 sistema E2E', () => {
   // PDF: Lab-Tema03-ISO410, Actividad 4

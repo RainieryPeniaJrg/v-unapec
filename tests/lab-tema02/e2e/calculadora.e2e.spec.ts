@@ -5,7 +5,7 @@ import { CalculadoraPage } from './pages/calculadora.page';
 import { appendE2ELog, buildE2EScreenshotPath } from '../../shared/e2e-log';
 import { createTestLogger } from '../../shared/logging/log-standard';
 
-const visualPauseMs = Number(process.env.PW_VISUAL_PAUSE ?? 2000);
+const visualPauseMs = Number(process.env.PW_VISUAL_PAUSE ?? 1500);
 
 test.describe('Tema 02 - 6B E2E Playwright (Edge)', () => {
   // PDF: Lab-Tema02-ISO410, Ejercicio 6

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const slowMo = Number(process.env.PW_SLOWMO_BANNER ?? 6000);
+const slowMo = Number(process.env.PW_SLOWMO_BANNER ?? 2000);
 
 export default defineConfig({
   testDir: './tests/banner/e2e',

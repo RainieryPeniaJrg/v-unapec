@@ -6,7 +6,7 @@ import { BannerSchedulePage } from './pages/banner-schedule.page';
 import { appendBannerRunLog, buildScreenshotPath, logDetailedConsole, logTableSummary } from './utils/banner-log';
 
 const bannerSite = 'https://landing.unapec.edu.do/banner/';
-const visualPauseMs = Number(process.env.PW_VISUAL_PAUSE ?? 2000);
+const visualPauseMs = Number(process.env.PW_VISUAL_PAUSE ?? 1500);
 
 test.describe('Banner E2E real', () => {
   // CONTEXTO: Test E2E de Banner Student Information System (UNAPEC)
