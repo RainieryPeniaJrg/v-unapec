@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const slowMo = Number(process.env.PW_SLOWMO_BANNER ?? 6000);
+
 export default defineConfig({
   testDir: './tests/banner/e2e',
   testMatch: '**/*.spec.ts',
@@ -10,6 +12,7 @@ export default defineConfig({
   expect: {
     timeout: 20_000,
   },
+  // Ejecución secuencial para visualización clara
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: 0,
@@ -23,9 +26,13 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'on',
-    // slowMo ralentiza cada accion Playwright (en ms) para propositos educativos/demostracion
+    // slowMo configurable via env para ejecuciones mas lentas
     // Permite explicar paso a paso cada interaccion del usuario (login, navegacion, clicks)
-    slowMo: 1500,
+    launchOptions: {
+      slowMo,
+    },
+    // Modo headed (UI visible) para todos los tests de Banner
+    headless: false,
   },
   projects: [
     {

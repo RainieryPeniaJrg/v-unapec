@@ -6,8 +6,20 @@ import { BannerSchedulePage } from './pages/banner-schedule.page';
 import { appendBannerRunLog, buildScreenshotPath, logDetailedConsole, logTableSummary } from './utils/banner-log';
 
 const bannerSite = 'https://landing.unapec.edu.do/banner/';
+const visualPauseMs = Number(process.env.PW_VISUAL_PAUSE ?? 2000);
 
 test.describe('Banner E2E real', () => {
+  // CONTEXTO: Test E2E de Banner Student Information System (UNAPEC)
+  // Propósito: Validar flujo real de autenticación OAuth, consulta de horario y cierre de sesión
+  // Nivel: Sistema completo (E2E)
+  // Navegador: Edge (Playwright con slowMo=1500ms para visualización)
+  // Criterios de Aceptación:
+  //   ✓ Login exitoso con credenciales de Microsoft AAD
+  //   ✓ Navegación a sección de horario
+  //   ✓ Consulta de asignaturas registradas en período
+  //   ✓ Logout sin errores
+  //   ✓ Logging completo con evidencias (screenshots, JSONL)
+
   test('BANNER-E2E-001 login -> consulta horario -> logout', async ({ page }, testInfo) => {
     const startedAt = Date.now();
     let env = getBannerEnv();
@@ -32,6 +44,7 @@ test.describe('Banner E2E real', () => {
       console.log(`👤 Usuario: ${env.bannerUsername}`);
       console.log(`🌐 Navegador: ${testInfo.project.name}`);
       console.log(`⏱️  Inicio: ${new Date().toLocaleTimeString()}\n`);
+      await page.waitForTimeout(visualPauseMs);
 
       await test.step('Validar entorno de credenciales (.env)', async () => {
         logDetailedConsole('Validando credenciales del entorno', 'start');

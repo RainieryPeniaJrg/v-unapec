@@ -1,26 +1,38 @@
 import { expect, test } from '@playwright/test';
 import { division, factorial, suma } from '../../../src/tema02/math-utils';
+import {
+  ARITHMETIC_TEST_CASES,
+  DIVISION_ERROR_CASES,
+  FACTORIAL_TEST_CASES,
+} from '../fixtures/math-utils-data';
 
 test.describe('Tema 02 - 3A Pruebas unitarias', () => {
-  test('suma(2,3) devuelve 5', () => {
-    expect(suma(2, 3)).toBe(5);
+  // PDF: Lab-Tema02-ISO410, Ejercicio 3A
+  // Criterios: ✓ Cubre suma ✓ Cubre división ✓ Cubre factorial ✓ Cubre errores división
+
+  ARITHMETIC_TEST_CASES.forEach(({ operation, a, b, expected, description }) => {
+    if (operation === 'suma') {
+      test(description, () => {
+        expect(suma(a, b)).toBe(expected);
+      });
+    } else if (operation === 'division') {
+      test(description, () => {
+        expect(division(a, b)).toBe(expected);
+      });
+    }
   });
 
-  test('division(10,2) devuelve 5', () => {
-    expect(division(10, 2)).toBe(5);
+  DIVISION_ERROR_CASES.forEach(({ shouldThrow, a, b, errorMessage, description }) => {
+    if (shouldThrow) {
+      test(description, () => {
+        expect(() => division(a, b)).toThrow(errorMessage);
+      });
+    }
   });
 
-  test('division(1,0) lanza error', () => {
-    expect(() => division(1, 0)).toThrow('b no puede ser 0');
-  });
-
-  [
-    { n: 0, esperado: 1 },
-    { n: 1, esperado: 1 },
-    { n: 5, esperado: 120 },
-  ].forEach(({ n, esperado }) => {
-    test(`factorial(${n}) == ${esperado}`, () => {
-      expect(factorial(n)).toBe(esperado);
+  FACTORIAL_TEST_CASES.forEach(({ n, expectedResult, description }) => {
+    test(description, () => {
+      expect(factorial(n)).toBe(expectedResult);
     });
   });
 });

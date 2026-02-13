@@ -2,6 +2,33 @@
 
 Repositorio estructurado para ejecutar laboratorios del curso ISO410 con enfoque de testing por niveles y trazabilidad documental.
 
+## ✨ NUEVO: Todos los tests en modo Headed (UI Visible)
+
+A partir de Feb 11, 2026, **todos los tests de Playwright se ejecutan en modo headed** (navegador visible) con visualización clara de cada paso:
+
+```bash
+# Executar con UI visible (RECOMENDADO para ver flujo):
+npm run test:tema02:e2e        # Calculadora E2E
+npm run test:tema03:e2e        # Login/Logout E2E  
+npm run test:banner            # Banner Sistema Real
+npm run test:e2e:all           # TODOS juntos
+
+# Opción: sin UI (para CI/CD):
+npm run test:tema02:e2e:headless
+npm run test:tema03:e2e:headless
+npm run test:banner:headless
+npm run test:e2e:all:headless
+```
+
+**Características:**
+- ✅ Browser visible durante ejecución
+- ✅ slowMo ralentiza acciones para seguimiento visual
+- ✅ Ejecución secuencial (no paralela)
+- ✅ Videos/screenshots automáticos en fallos
+- ✅ JSONL logs en `evidencias/tema*/logs/`
+
+👉 **Guía completa:** Ver [docs/GUIA_EJECUCION_TESTS.md](docs/GUIA_EJECUCION_TESTS.md)
+
 ## Laboratorios incluidos
 
 - Tema 02: `tests/lab-tema02/` y `docs/lab-tema02/`.
@@ -25,9 +52,7 @@ npx playwright install msedge
 npm test
 ```
 
-## Scripts
-
-- `npm test`: ejecuta todas las pruebas Playwright (Tema 02 + Tema 03).
+## Scripts Principales
 - `npm run test:unit`: unitarias Tema 02.
 - `npm run test:integration`: integracion Tema 02.
 - `npm run test:e2e`: E2E Tema 02.

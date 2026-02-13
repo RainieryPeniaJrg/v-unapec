@@ -12,6 +12,9 @@ const validPassword = 'clave123';
 const validToken = 'token-mock-ana';
 
 test.describe('Tema 03 - Actividad 3 integracion API mock local', () => {
+  // PDF: Lab-Tema03-ISO410, Actividad 3
+  // Criterios: ✓ Mock de API REST ✓ Pruebas de integración ✓ Manejo de errores HTTP
+  
   test.beforeEach(async ({ page }) => {
     await page.route(`${apiBaseUrl}/api/login`, async (route) => {
       const request = route.request();
